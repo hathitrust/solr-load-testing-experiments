@@ -3,19 +3,6 @@ import csv
 
 INPUT_FILE = 'log.tsv'
 
-def monkey_get(self, _, method):
-    """
-    Retrieve a StatsEntry instance by method, ignore name
-    """
-    name = "URL"
-    entry = self.entries.get((name, method))
-    if not entry:
-        entry = stats.StatsEntry(self, name, method)
-        self.entries[(name, method)] = entry
-    return entry
-
-stats.RequestStats.get = monkey_get
-
 queue = []
 with open(INPUT_FILE, newline='') as tsvfile:
     lines = csv.reader(tsvfile, delimiter="\t")
@@ -27,7 +14,7 @@ class MyTaskSet(TaskSet):
     @task(1)
     def solrQuery(self):
         if len(queue) > 0:
-            self.client.get(queue.pop())
+            self.client.get(queue.pop(), name="Solr Query")
 
 class WebsiteUser(HttpLocust):
     # meaningless, because we're using full URLs, but require by Locust
