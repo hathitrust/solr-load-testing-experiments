@@ -1,7 +1,20 @@
-from locust import HttpLocust, TaskSet, task
+from locust import HttpLocust, TaskSet, task, stats
 import csv
 
 INPUT_FILE = 'log.tsv'
+
+def monkey_get(self, _, method):
+    """
+    Retrieve a StatsEntry instance by method, ignore name
+    """
+    name = "URL"
+    entry = self.entries.get((name, method))
+    if not entry:
+        entry = stats.StatsEntry(self, name, method)
+        self.entries[(name, method)] = entry
+    return entry
+
+stats.RequestStats.get = monkey_get
 
 queue = []
 with open(INPUT_FILE, newline='') as tsvfile:
