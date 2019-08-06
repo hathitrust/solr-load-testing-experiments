@@ -20,5 +20,6 @@ class WebsiteUser(HttpLocust):
     # meaningless, because we're using full URLs, but require by Locust
     host = "https://www.hathitrust.org/"
     task_set = MyTaskSet
-    min_wait = 1000
-    max_wait = 1000
+    min_wait = 10000
+    max_wait = 10000
+
